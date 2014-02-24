@@ -1,0 +1,7 @@
+extend layout
+
+block content
+  h2 Entries
+  each val in posts
+    h3= val.name
+    p!= val.content

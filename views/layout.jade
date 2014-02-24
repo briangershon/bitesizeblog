@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/foundation.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    nav.top-bar
+      ul.title-area
+        li.name
+          h1
+            a(href="/")= title
+    .container
+      .main-content
+        .row
+          .small-12.columns
+            block content
