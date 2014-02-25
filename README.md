@@ -12,13 +12,20 @@ This has led to developing the `bitesize` JavaScript library, which won't genera
 
 ## How to run site in development mode
 
-Create system environmental variables:
+Customize blog via setting system environmental variables:
 
-        export BITESIZE_GITHUB_ACCESS_TOKEN='token-goes-here'   # create token at github.com
-        export BITESIZE_GITHUB_REPO='briangershon/hexo-blog'    # the username and repository
-        export BITESIZE_POST_PATH='source/_posts'               # a path within that repository
+        # set these in your shell, or in your deployment environment
+        #   e.g. heroku config:set BITESIZE_GITHUB_ACCESS_TOKEN='xyz'
 
-Install node modules and start up Supervisor:
+        # create access token in github.com
+        BITESIZE_GITHUB_ACCESS_TOKEN='token-goes-here'
+        BITESIZE_BLOG_TITLE='new.blog.evolvingbits.com'
+        BITESIZE_BLOG_GITHUB_REPO='briangershon/blog.evolvingbits.com'
+        BITESIZE_BLOG_GITHUB_POST_PATH='posts'
+        BITESIZE_BLOG_IMAGE_ROUTE='/images/post/*'
+        BITESIZE_BLOG_IMAGE_PATH='https://raw.github.com/briangershon/blog.evolvingbits.com/master'
+
+Install node modules and start up app:
 
         npm install
         npm start

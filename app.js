@@ -27,12 +27,18 @@ if ('development' === app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.set('blog_image_route', '/images/post/*');
-app.set('blog_image_path', 'https://raw.github.com/briangershon/blog.evolvingbits.com/master');
-app.set('blog_title', 'new.blog.evolvingbits.com');
+var config = {
+  BITESIZE_GITHUB_ACCESS_TOKEN: process.env.BITESIZE_GITHUB_ACCESS_TOKEN,
+  BITESIZE_BLOG_TITLE: process.env.BITESIZE_BLOG_TITLE,
+  BITESIZE_BLOG_GITHUB_REPO: process.env.BITESIZE_BLOG_GITHUB_REPO,
+  BITESIZE_BLOG_GITHUB_POST_PATH: process.env.BITESIZE_BLOG_GITHUB_POST_PATH,
+  BITESIZE_BLOG_IMAGE_ROUTE: process.env.BITESIZE_BLOG_IMAGE_ROUTE,
+  BITESIZE_BLOG_IMAGE_PATH: process.env.BITESIZE_BLOG_IMAGE_PATH
+};
+app.set('config', config);
 
 app.get('/', routes.index);
-app.get(app.get('blog_image_route'), image.imageRedirect);
+app.get(config.BITESIZE_BLOG_IMAGE_ROUTE, image.imageRedirect);
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
