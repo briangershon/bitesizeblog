@@ -19,12 +19,14 @@ var blog = new Blog({
 });
 
 exports.index = function (req, res) {
+  var title = req.app.get('blog_title');
+
   blog.getAllPosts().then(function (posts) {
     posts.forEach(function (post) {
       if (post.type === 'markdown') {
         post.content = marked(post.content);
       }
     });
-    res.render('index', {title: 'blog.evolvingbits.com', posts: posts});
+    res.render('index', {title: title, posts: posts});
   });
 };
