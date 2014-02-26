@@ -4,4 +4,5 @@ block content
   h2 Entries
   each post in posts
     h3= post.title
+    p= 'Date: ' + post.date + ' Categories: ' + post.categories + ' Tags: ' + post.tags
     p!= post.body

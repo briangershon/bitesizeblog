@@ -5,7 +5,8 @@
 var github = require('octonode'),
   marked = require('marked'),
   GH = require('bitesize').GH,
-  Blog = require('bitesize').Blog;
+  Blog = require('bitesize').Blog,
+  moment = require('moment');
 
 exports.index = function (req, res) {
   var envAccessToken = req.app.get('config').BITESIZE_GITHUB_ACCESS_TOKEN,
@@ -33,8 +34,12 @@ exports.index = function (req, res) {
         body = marked(post.sections().body);
       }
 
+      var header = post.sections().header;
       renderedPosts.push({
-        title: post.sections().header.title,
+        title: header.title,
+        date: moment(header.date).format('LL'),
+        categories: header.categories,
+        tags: header.tags,
         body: body
       });
     });
