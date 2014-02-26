@@ -4,6 +4,7 @@
 
 var github = require('octonode'),
   marked = require('marked'),
+  GH = require('bitesize').GH,
   Blog = require('bitesize').Blog;
 
 exports.index = function (req, res) {
@@ -14,19 +15,29 @@ exports.index = function (req, res) {
   var client = github.client(envAccessToken);
   var ghrepo = client.repo(envGitHubRepo);
 
-  var blog = new Blog({
+  var gh = new GH({
     ghrepo: ghrepo,
     postPath: envPostPath
   });
 
   var title = req.app.get('config').BITESIZE_BLOG_TITLE;
 
-  blog.getAllPosts().then(function (posts) {
-    posts.forEach(function (post) {
-      if (post.type === 'markdown') {
-        post.content = marked(post.content);
+  gh.getAllFiles().then(function (posts) {
+    var blog = new Blog(posts),
+      renderedPosts = [],
+      body;
+
+    blog.posts.forEach(function (post) {
+      body = post.sections().body;
+      if (post.post.type === 'markdown') {
+        body = marked(post.sections().body);
       }
+
+      renderedPosts.push({
+        title: post.sections().header.title,
+        body: body
+      });
     });
-    res.render('index', {title: title, posts: posts});
+    res.render('index', {title: title, posts: renderedPosts});
   });
 };
