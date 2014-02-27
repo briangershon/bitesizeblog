@@ -2,6 +2,13 @@
  * Module dependencies.
  */
 
+var github = require('octonode'),
+  marked = require('marked'),
+  GH = require('bitesize').GH,
+  Blog = require('bitesize').Blog,
+  moment = require('moment'),
+  Promise = require('es6-promise').Promise;
+
 var express = require('express');
 var routes = require('./routes');
 var image = require('./routes/image');
@@ -36,6 +43,55 @@ var config = {
   BITESIZE_BLOG_IMAGE_PATH: process.env.BITESIZE_BLOG_IMAGE_PATH
 };
 app.set('config', config);
+
+app.locals.postCache = [];
+app.locals.allPosts = function () {
+  return new Promise(function (resolve, reject) {
+    if (app.locals.postCache.length > 0) {
+      resolve(app.locals.postCache);
+      return;
+    }
+
+    var envAccessToken = config.BITESIZE_GITHUB_ACCESS_TOKEN,
+      envGitHubRepo = config.BITESIZE_BLOG_GITHUB_REPO,
+      envPostPath = config.BITESIZE_BLOG_GITHUB_POST_PATH;
+
+    var client = github.client(envAccessToken);
+    var ghrepo = client.repo(envGitHubRepo);
+
+    var gh = new GH({
+      ghrepo: ghrepo,
+      postPath: envPostPath
+    });
+
+    gh.getAllFiles().then(function (posts) {
+      var blog = new Blog(posts),
+        renderedPosts = [],
+        body;
+
+      blog.posts.forEach(function (post) {
+        body = post.sections().body;
+        if (post.post.type === 'markdown') {
+          body = marked(post.sections().body);
+        }
+
+        var header = post.sections().header;
+        renderedPosts.push({
+          title: header.title,
+          date: moment(header.date).format('LL'),
+          categories: header.categories,
+          tags: header.tags,
+          body: body
+        });
+      });
+      app.locals.postCache = renderedPosts;
+      app.locals.cacheTimestamp = new Date();
+      resolve(renderedPosts);
+    });
+
+  });
+
+};
 
 app.get('/', routes.index);
 app.get(config.BITESIZE_BLOG_IMAGE_ROUTE, image.imageRedirect);
