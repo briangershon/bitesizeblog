@@ -66,23 +66,11 @@ app.locals.allPosts = function () {
 
     gh.getAllFiles().then(function (posts) {
       var blog = new Blog(posts),
-        renderedPosts = [],
-        body;
+        renderedPosts = [];
 
       blog.posts.forEach(function (post) {
-        body = post.sections().body;
-        if (post.post.type === 'markdown') {
-          body = marked(post.sections().body);
-        }
-
-        var header = post.sections().header;
-        renderedPosts.push({
-          title: header.title,
-          date: moment(header.date).format('LL'),
-          categories: header.categories,
-          tags: header.tags,
-          body: body
-        });
+        post.body = marked(post.body);
+        renderedPosts.push(post);
       });
       app.locals.postCache = renderedPosts;
       app.locals.cacheTimestamp = new Date();
@@ -90,7 +78,6 @@ app.locals.allPosts = function () {
     });
 
   });
-
 };
 
 app.get('/', routes.index);
