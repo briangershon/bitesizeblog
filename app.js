@@ -7,7 +7,8 @@ var github = require('octonode'),
   GH = require('bitesize').GH,
   Blog = require('bitesize').Blog,
   moment = require('moment'),
-  Promise = require('es6-promise').Promise;
+  Promise = require('es6-promise').Promise,
+  _ = require('lodash');
 
 var express = require('express');
 var routes = require('./routes');
@@ -68,7 +69,7 @@ app.locals.allPosts = function () {
       var blog = new Blog(posts),
         renderedPosts = [];
 
-      blog.posts.forEach(function (post) {
+      _.sortBy(blog.posts, 'name').reverse().forEach(function (post) {
         post.body = marked(post.body);
         renderedPosts.push(post);
       });
