@@ -61,9 +61,7 @@ if ('development' === app.get('env')) {
 var config = {
   BITESIZE_GITHUB_ACCESS_TOKEN: process.env.BITESIZE_GITHUB_ACCESS_TOKEN,
   BITESIZE_BLOG_GITHUB_REPO: process.env.BITESIZE_BLOG_GITHUB_REPO,
-  BITESIZE_BLOG_GITHUB_POST_PATH: process.env.BITESIZE_BLOG_GITHUB_POST_PATH,
-  BITESIZE_BLOG_IMAGE_ROUTE: process.env.BITESIZE_BLOG_IMAGE_ROUTE,
-  BITESIZE_BLOG_IMAGE_PATH: process.env.BITESIZE_BLOG_IMAGE_PATH
+  BITESIZE_BLOG_GITHUB_POST_PATH: process.env.BITESIZE_BLOG_GITHUB_POST_PATH
 };
 app.set('config', config);
 
@@ -80,7 +78,7 @@ app.locals.postCache = readCache('post.cache.txt') || [];
 app.locals.getConfig = function () {
   console.log('app.locals.getConfig ENTER');
 
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     if (app.locals.configCache) {
       console.log('app.locals.getConfig FROM CACHE');
       resolve(app.locals.configCache);
@@ -91,23 +89,20 @@ app.locals.getConfig = function () {
       ghrepo: ghrepo
     });
 
-    gh.getFile('config.yml').then(function (configFile) {
+    gh.getFile('config.yml').then(function success(configFile) {
       console.log('app.locals.getConfig RETRIEVED');
       app.locals.configCache = YAML.parse(configFile.content);
       writeCache('config.cache.txt', app.locals.configCache);
       resolve(app.locals.configCache);
+    }, function fail() {
+      resolve({});
     });
   });
 };
 
-function rewriteImageURLs(body, imagePrefix, imageNewPrefix) {
-  var re = new RegExp(imagePrefix, 'g');
-  return body.replace(re, imageNewPrefix);
-}
-
 app.locals.getPosts = function () {
   console.log('app.locals.getPosts ENTER');
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve) {
     if (app.locals.postCache.length > 0) {
       console.log('app.locals.getPosts FROM CACHE');
       resolve(app.locals.postCache);
@@ -123,11 +118,13 @@ app.locals.getPosts = function () {
       var config = results[0],
         posts = results[1];
 
-      var blog = new Blog(posts),
+      var blog = new Blog(posts, {
+          image_prefix: config.image_prefix,
+          image_new_prefix: config.image_new_prefix
+        }),
         renderedPosts = [];
 
       _.sortBy(blog.posts, 'name').reverse().forEach(function (post) {
-        post.body = rewriteImageURLs(post.body, config.image_prefix, config.image_new_prefix);
         post.body = marked(post.body);
         renderedPosts.push(post);
       });
