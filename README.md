@@ -12,16 +12,19 @@ This has led to developing the `bitesize` JavaScript library, which won't genera
 
 ## How to run site in development mode
 
-Customize blog via setting system environmental variables:
+Customize repo access token via setting system environmental variable:
 
         # set these in your shell, or in your deployment environment
         #   e.g. heroku config:set BITESIZE_GITHUB_ACCESS_TOKEN='xyz'
 
         # create access token in github.com
         BITESIZE_GITHUB_ACCESS_TOKEN='token-goes-here'
-        BITESIZE_BLOG_TITLE='new.blog.evolvingbits.com'
         BITESIZE_BLOG_GITHUB_REPO='briangershon/blog.evolvingbits.com'
         BITESIZE_BLOG_GITHUB_POST_PATH='posts'
+
+Customize the rest of settings in a config.yml file in the root of your repo:
+
+        TODO: Move these keys into config.yml in blog content repo:
         BITESIZE_BLOG_IMAGE_ROUTE='/images/post/*'
         BITESIZE_BLOG_IMAGE_PATH='https://raw.github.com/briangershon/blog.evolvingbits.com/master'
 

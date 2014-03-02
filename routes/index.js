@@ -1,9 +1,16 @@
 /*
  * GET home page.
  */
+var Promise = require('es6-promise').Promise;
+
 exports.index = function (req, res) {
-  var title = req.app.get('config').BITESIZE_BLOG_TITLE;
-  req.app.locals.allPosts().then(function (posts) {
+  Promise.all([req.app.locals.getConfig(), req.app.locals.getPosts()]).then(function (results) {
+    var contentConfig = results[0],
+      posts = results[1];
+
+    var title = contentConfig.title;
     res.render('index', {title: title, posts: posts, cacheTimestamp: req.app.locals.cacheTimestamp});
+  }, function fail(err) {
+    console.log('INDEX ERROR', err);
   });
 };

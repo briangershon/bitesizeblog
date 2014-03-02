@@ -6,15 +6,18 @@ var github = require('octonode'),
   marked = require('marked'),
   GH = require('bitesize').GH,
   Blog = require('bitesize').Blog,
-  moment = require('moment'),
   Promise = require('es6-promise').Promise,
-  _ = require('lodash');
+  _ = require('lodash'),
+  YAML = require('yamljs'),
+  fs = require('fs'),
+  path = require('path');
 
 var express = require('express');
 var routes = require('./routes');
 var image = require('./routes/image');
 var http = require('http');
 var path = require('path');
+var feedRoute = require('./routes/feed');
 
 var app = express();
 
@@ -33,11 +36,31 @@ app.use(express.static(path.join(__dirname, 'public')));
 // development only
 if ('development' === app.get('env')) {
   app.use(express.errorHandler());
+
+  var readCache = function (filename) {
+    try {
+      var filePath = path.join(__dirname + "/" + filename);
+      var data = fs.readFileSync(filePath, "utf8");
+      var cachedResults = YAML.parse(data);
+      return cachedResults;
+    }
+    catch(err) {
+      return null;
+      }
+  };
+
+  var writeCache = function (filename, data) {
+    var filePath = path.join(__dirname + "/" + filename);
+    fs.writeFileSync(filePath, YAML.stringify(data), "utf8");
+  };
+
+} else {
+  var readCache = function (filename) { return null; };
+  var writeCache = function (filename, data) {};
 }
 
 var config = {
   BITESIZE_GITHUB_ACCESS_TOKEN: process.env.BITESIZE_GITHUB_ACCESS_TOKEN,
-  BITESIZE_BLOG_TITLE: process.env.BITESIZE_BLOG_TITLE,
   BITESIZE_BLOG_GITHUB_REPO: process.env.BITESIZE_BLOG_GITHUB_REPO,
   BITESIZE_BLOG_GITHUB_POST_PATH: process.env.BITESIZE_BLOG_GITHUB_POST_PATH,
   BITESIZE_BLOG_IMAGE_ROUTE: process.env.BITESIZE_BLOG_IMAGE_ROUTE,
@@ -45,20 +68,47 @@ var config = {
 };
 app.set('config', config);
 
-app.locals.postCache = [];
-app.locals.allPosts = function () {
+var envAccessToken = config.BITESIZE_GITHUB_ACCESS_TOKEN,
+  envGitHubRepo = config.BITESIZE_BLOG_GITHUB_REPO,
+  envPostPath = config.BITESIZE_BLOG_GITHUB_POST_PATH;
+
+var client = github.client(envAccessToken);
+var ghrepo = client.repo(envGitHubRepo);
+
+app.locals.configCache = readCache('config.cache.txt');
+app.locals.postCache = readCache('post.cache.txt') || [];
+
+app.locals.getConfig = function () {
+  console.log('app.locals.getConfig ENTER');
+
   return new Promise(function (resolve, reject) {
-    if (app.locals.postCache.length > 0) {
-      resolve(app.locals.postCache);
+    if (app.locals.configCache) {
+      console.log('app.locals.getConfig FROM CACHE');
+      resolve(app.locals.configCache);
       return;
     }
 
-    var envAccessToken = config.BITESIZE_GITHUB_ACCESS_TOKEN,
-      envGitHubRepo = config.BITESIZE_BLOG_GITHUB_REPO,
-      envPostPath = config.BITESIZE_BLOG_GITHUB_POST_PATH;
+    var gh = new GH({
+      ghrepo: ghrepo
+    });
 
-    var client = github.client(envAccessToken);
-    var ghrepo = client.repo(envGitHubRepo);
+    gh.getFile('config.yml').then(function (configFile) {
+      console.log('app.locals.getConfig RETRIEVED');
+      app.locals.configCache = YAML.parse(configFile.content);
+      writeCache('config.cache.txt', app.locals.configCache);
+      resolve(app.locals.configCache);
+    });
+  });
+};
+
+app.locals.getPosts = function () {
+  console.log('app.locals.getPosts ENTER');
+  return new Promise(function (resolve, reject) {
+    if (app.locals.postCache.length > 0) {
+      console.log('app.locals.getPosts FROM CACHE');
+      resolve(app.locals.postCache);
+      return;
+    }
 
     var gh = new GH({
       ghrepo: ghrepo,
@@ -74,7 +124,10 @@ app.locals.allPosts = function () {
         renderedPosts.push(post);
       });
       app.locals.postCache = renderedPosts;
+      writeCache('post.cache.txt', app.locals.postCache);
       app.locals.cacheTimestamp = new Date();
+
+      console.log('app.locals.getPosts RETRIEVED');
       resolve(renderedPosts);
     });
 
@@ -82,6 +135,7 @@ app.locals.allPosts = function () {
 };
 
 app.get('/', routes.index);
+app.get('/atom.xml', feedRoute.feed);
 app.get(config.BITESIZE_BLOG_IMAGE_ROUTE, image.imageRedirect);
 
 http.createServer(app).listen(app.get('port'), function () {
