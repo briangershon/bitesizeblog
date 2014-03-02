@@ -14,7 +14,6 @@ var github = require('octonode'),
 
 var express = require('express');
 var routes = require('./routes');
-var image = require('./routes/image');
 var http = require('http');
 var path = require('path');
 var feedRoute = require('./routes/feed');
@@ -44,9 +43,9 @@ if ('development' === app.get('env')) {
       var cachedResults = YAML.parse(data);
       return cachedResults;
     }
-    catch(err) {
+    catch (err) {
       return null;
-      }
+    }
   };
 
   var writeCache = function (filename, data) {
@@ -55,8 +54,8 @@ if ('development' === app.get('env')) {
   };
 
 } else {
-  var readCache = function (filename) { return null; };
-  var writeCache = function (filename, data) {};
+  var readCache = function () { return null; };
+  var writeCache = function () {};
 }
 
 var config = {
@@ -101,6 +100,11 @@ app.locals.getConfig = function () {
   });
 };
 
+function rewriteImageURLs(body, imagePrefix, imageNewPrefix) {
+  var re = new RegExp(imagePrefix, 'g');
+  return body.replace(re, imageNewPrefix);
+}
+
 app.locals.getPosts = function () {
   console.log('app.locals.getPosts ENTER');
   return new Promise(function (resolve, reject) {
@@ -115,11 +119,15 @@ app.locals.getPosts = function () {
       postPath: envPostPath
     });
 
-    gh.getAllFiles().then(function (posts) {
+    Promise.all([app.locals.getConfig(), gh.getAllFiles()]).then(function (results) {
+      var config = results[0],
+        posts = results[1];
+
       var blog = new Blog(posts),
         renderedPosts = [];
 
       _.sortBy(blog.posts, 'name').reverse().forEach(function (post) {
+        post.body = rewriteImageURLs(post.body, config.image_prefix, config.image_new_prefix);
         post.body = marked(post.body);
         renderedPosts.push(post);
       });
@@ -136,7 +144,6 @@ app.locals.getPosts = function () {
 
 app.get('/', routes.index);
 app.get('/atom.xml', feedRoute.feed);
-app.get(config.BITESIZE_BLOG_IMAGE_ROUTE, image.imageRedirect);
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));

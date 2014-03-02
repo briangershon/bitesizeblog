@@ -22,11 +22,9 @@ Customize repo access token via setting system environmental variable:
         BITESIZE_BLOG_GITHUB_REPO='briangershon/blog.evolvingbits.com'
         BITESIZE_BLOG_GITHUB_POST_PATH='posts'
 
-Customize the rest of settings in a config.yml file in the root of your repo:
+Customize the rest of settings in a config.yml file in the root of your repo.
 
-        TODO: Move these keys into config.yml in blog content repo:
-        BITESIZE_BLOG_IMAGE_ROUTE='/images/post/*'
-        BITESIZE_BLOG_IMAGE_PATH='https://raw.github.com/briangershon/blog.evolvingbits.com/master'
+See https://github.com/briangershon/blog.evolvingbits.com for an example config.yml and markdown posts.
 
 Install node modules and start up app:
 
