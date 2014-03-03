@@ -9,7 +9,7 @@ exports.index = function (req, res) {
       posts = results[1];
 
     var title = contentConfig.title;
-    res.render('index', {title: title, posts: posts, cacheTimestamp: req.app.locals.cacheTimestamp});
+    res.render('index', {title: title, posts: posts.slice(0, 3), cacheTimestamp: req.app.locals.cacheTimestamp});
   }, function fail(err) {
     console.log('INDEX ERROR', err);
   });
