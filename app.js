@@ -59,16 +59,9 @@ if ('development' === app.get('env')) {
   var writeCache = function () {};
 }
 
-var config = {
-  BITESIZE_GITHUB_ACCESS_TOKEN: process.env.BITESIZE_GITHUB_ACCESS_TOKEN,
-  BITESIZE_BLOG_GITHUB_REPO: process.env.BITESIZE_BLOG_GITHUB_REPO,
-  BITESIZE_BLOG_GITHUB_POST_PATH: process.env.BITESIZE_BLOG_GITHUB_POST_PATH
-};
-app.set('config', config);
-
-var envAccessToken = config.BITESIZE_GITHUB_ACCESS_TOKEN,
-  envGitHubRepo = config.BITESIZE_BLOG_GITHUB_REPO,
-  envPostPath = config.BITESIZE_BLOG_GITHUB_POST_PATH;
+var envAccessToken = process.env.BITESIZE_GITHUB_ACCESS_TOKEN,
+  envGitHubRepo = process.env.BITESIZE_BLOG_GITHUB_REPO,
+  envPostPath = process.env.BITESIZE_BLOG_GITHUB_POST_PATH;
 
 var client = github.client(envAccessToken);
 var ghrepo = client.repo(envGitHubRepo);
@@ -116,12 +109,12 @@ app.locals.getPosts = function () {
     });
 
     Promise.all([app.locals.getConfig(), gh.getAllFiles()]).then(function (results) {
-      var config = results[0],
+      var contentConfig = results[0],
         posts = results[1];
 
       var blog = new Blog(posts, {
-          image_prefix: config.image_prefix,
-          image_new_prefix: config.image_new_prefix
+          image_prefix: contentConfig.image_prefix,
+          image_new_prefix: contentConfig.image_new_prefix
         }),
         renderedPosts = [];
 
