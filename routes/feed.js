@@ -29,9 +29,13 @@ exports.feed = function (req, res) {
       });
 
     posts.forEach(function (post) {
+      var permalink = contentConfig.url + contentConfig.permalink_prefix + post.route,
+        id = permalink.substring(0, permalink.length - 1);  // strip off trailing / to match octopress version
+
       var item = {
+        id:             id,
         title:          post.title,
-        link:           contentConfig.url + contentConfig.permalink_prefix + post.route,
+        link:           permalink,
         // description:    post.description,
         date:           new Date(post.date),
         // image:          post.image
