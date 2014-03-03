@@ -1,15 +1,9 @@
 extend layout
 
 block content
-  h2 Entries
-  each post in posts
     p= post.date.toDateString()
-
-    h3
-      a(href="/blog" + post.route)
-        span= post.title
-
-      p
+    h3= post.title
+    p
       if post.categories && post.categories.length > 0
         span= ' Categories: ' + post.categories + '.'
 

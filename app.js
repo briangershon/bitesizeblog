@@ -17,6 +17,7 @@ var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var feedRoute = require('./routes/feed');
+var postRoute = require('./routes/post');
 
 var app = express();
 
@@ -141,6 +142,7 @@ app.locals.getPosts = function () {
 
 app.get('/', routes.index);
 app.get('/atom.xml', feedRoute.feed);
+app.get('/blog/:year/:month/:day/:title/', postRoute.index);
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
