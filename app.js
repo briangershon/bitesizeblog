@@ -142,7 +142,11 @@ app.locals.getPosts = function () {
 
 app.get('/', routes.index);
 app.get('/atom.xml', feedRoute.feed);
-app.get('/blog/:year/:month/:day/:title/', postRoute.index);
+
+app.locals.getConfig().then(function (contentConfig) {
+  app.get(contentConfig.permalink, postRoute.index);
+});
+
 
 http.createServer(app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));

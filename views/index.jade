@@ -6,10 +6,10 @@ block content
     p= post.date.toDateString()
 
     h3
-      a(href="/blog" + post.route)
+      a(href="" + permalinkPrefix + post.route)
         span= post.title
 
-      p
+    p
       if post.categories && post.categories.length > 0
         span= ' Categories: ' + post.categories + '.'
 
