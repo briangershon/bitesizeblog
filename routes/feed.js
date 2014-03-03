@@ -10,26 +10,46 @@ exports.feed = function (req, res) {
     var contentConfig = results[0],
       posts = results[1];
 
+    var lastUpdated = new Date(posts[0].date);
+
     var feedResults = new Feed({
       title:       contentConfig.title,
-      description: 'This is my personnal feed!',
-      link:        'http://example.com/',
-      image:       'http://example.com/image.png',
-      copyright:   'All rights reserved 2013, John Doe',
-      updated:     new Date(2013, 06, 14),                // optional, default = today
+      description: contentConfig.description,
+      id:          contentConfig.url + "/",   // match octopress version with trailing /
+      link:        contentConfig.url + "/",   // match octopress version with trailing /
+      // image:       'http://example.com/image.png',
+      copyright:   'All rights reserved 2014, ' + contentConfig.author,
+      updated:     lastUpdated,
 
       author: {
-          name:    'John Doe',
-          email:   'johndoe@example.com',
-          link:    'https://example.com/johndoe'
+          name:    contentConfig.author,
+          // email:   '',
+          // link:    'https://example.com/johndoe'
         }
       });
 
-    res.set('Content-Type', 'text/xml');
-    res.send(feedResults.render('atom-1.0'));
+    posts.forEach(function (post) {
+      var item = {
+        title:          post.title,
+        link:           contentConfig.url + contentConfig.permalink_prefix + post.route,
+        // description:    post.description,
+        date:           new Date(post.date),
+        // image:          post.image
+        content: post.body
+      };
+      feedResults.addItem(item);
+    });
 
+    try {
+      var feedRender = feedResults.render('atom-1.0');
+      res.set('Content-Type', 'text/xml');
+      res.send(feedRender);
+    }
+    catch (err) {
+      res.send(500, "Problem generating feed due to " + err.message);
+    }
 
   }, function fail(err) {
-    console.log('INDEX ERROR', err);
+    res.send(500, "Promise failed. Problem generating feed due to " + err.message);
   });
 };

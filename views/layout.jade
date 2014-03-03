@@ -4,13 +4,17 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/foundation.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel='alternate', href='http://feeds.feedburner.com/evolvingbits', title='Evolving Bits', type='application/atom+xml')
+    link(rel='alternate', href=feedURL, title='Evolving Bits', type='application/atom+xml')
   body
     nav.top-bar
       ul.title-area
         li.name
           h1
             a(href="/")= title
+        li
+          a(href=feedURL)
+            img(src="/images/rss.png" alt="atom feed")
+
     .container
       .main-content
         .row
