@@ -1,19 +1,43 @@
 extend layout
 
 block content
-  h2 Entries
-  each post in posts
-    p= post.date.toDateString()
+  each post, index in posts
+    article
+      p= post.date.toDateString()
 
-    h3
-      a(href="" + permalinkPrefix + post.route)
-        span= post.title
+      h3
+        a(href="" + permalinkPrefix + post.route)= post.title
 
-    p
-      if post.categories && post.categories.length > 0
-        span= ' Categories: ' + post.categories + '.'
+      //
+        p
+          if post.categories && post.categories.length > 0
+            span= ' Categories: ' + post.categories + '.'
 
-      if post.tags && post.tags.length > 0
-        span= ' Tags: ' + post.tags + '.'
+          if post.tags && post.tags.length > 0
+            span= ' Tags: ' + post.tags + '.'
 
-    p!= post.body
+      p!= post.body
+
+    //- don't show hr above footer's hr
+    if index < posts.length - 1
+      hr
+
+block sidebar
+  //- h5 Categories
+  //- ul.side-nav
+  //-   li <a href="#">News</a>
+  //-   li <a href="#">Code</a>
+  //-   li <a href="#">Design</a>
+  //-   li <a href="#">Fun</a>
+  //-   li <a href="#">Weasels</a>
+
+  div.panel
+    h5 About Me
+
+    p Brian Gershon is a Senior Developer who builds web apps, mobile apps, and node.js tools. I focus on JavaScript and Objective-C.
+
+    p(align="center")
+      img(src="http://www.gravatar.com/avatar/77e2274e2f65cb21bf82ba06c33a5ead.jpg?s=256")
+      hr
+
+    p I'm employed at <a href="http://www.unity3d.com" target="_blank">Unity</a> as a member of their Online Services engineering team working on the new Unity Cloud.

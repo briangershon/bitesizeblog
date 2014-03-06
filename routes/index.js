@@ -14,7 +14,8 @@ exports.index = function (req, res) {
       permalinkPrefix: contentConfig.permalink_prefix,
       posts: posts.slice(0, 3),
       feedURL: contentConfig.subscribe_rss,
-      cacheTimestamp: req.app.locals.cacheTimestamp
+      cacheTimestamp: req.app.locals.cacheTimestamp,
+      homePage: true
     });
   }, function fail(err) {
     console.log('INDEX ERROR', err);

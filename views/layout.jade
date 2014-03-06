@@ -6,17 +6,57 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='alternate', href=feedURL, title='Evolving Bits', type='application/atom+xml')
   body
-    nav.top-bar
-      ul.title-area
-        li.name
-          h1
-            a(href="/")= title
-        li
-          a(href=feedURL)
-            img(src="/images/rss.png" alt="atom feed")
+    // Nav Bar
+    div.row
+      div.large-12.columns
+        div.nav-bar.right
+          ul.button-group
+            li
+              a.button(href="http://www.github.com/briangershon", target="_blank") GitHub
+            li
+              a.button(href="http://www.twitter.com/brianfive", target="_blank") Twitter
+            li
+              a.button(href="http://www.linkedin.com/in/briangershon", target="_blank") LinkedIn
+            li
+              a.button(href=feedURL) <img src="/images/rss.png" alt="atom feed" width="15px" />
+        h1
+          a(href="/")= title
+          //- small  Javascript
+        hr
 
-    .container
-      .main-content
-        .row
-          .small-12.columns
-            block content
+    // Main Page Content and Sidebar
+    if homePage
+      div.row
+        div.large-9.columns(role="content")
+          block content
+
+        // Sidebar
+        div.large-3.columns
+          block sidebar
+
+    if !homePage
+      div.row
+        div.large-12.columns(role="content")
+          block content
+
+  // Footer
+  footer.row
+    div.large-12.columns
+      div.row
+        div.large-12.columns
+          hr
+          p
+            © Copyright 2014 Brian Gershon. This is my <a href="https://github.com/briangershon/bitesizeblog" target="_blank">home-grown blog</a> running on node.js.
+
+        //- div.large-4.columns
+          //- ul.inline-list.right
+          //-   li <a href="#">Link 1</a>
+          //-   li <a href="#">Link 2</a>
+          //-   li <a href="#">Link 3</a>
+          //-   li <a href="#">Link 4</a>
+
+script(src='/javascripts/vendor/jquery.js')
+script(src='/javascripts/foundation.min.js')
+
+script(type='text/javascript').
+  $(document).foundation();

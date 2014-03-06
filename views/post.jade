@@ -3,11 +3,13 @@ extend layout
 block content
     p= post.date.toDateString()
     h3= post.title
-    p
-      if post.categories && post.categories.length > 0
-        span= ' Categories: ' + post.categories + '.'
 
-      if post.tags && post.tags.length > 0
-        span= ' Tags: ' + post.tags + '.'
+    //
+      p
+        if post.categories && post.categories.length > 0
+          span= ' Categories: ' + post.categories + '.'
+
+        if post.tags && post.tags.length > 0
+          span= ' Tags: ' + post.tags + '.'
 
     p!= post.body
