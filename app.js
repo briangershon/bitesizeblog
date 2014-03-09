@@ -13,7 +13,8 @@ var github = require('octonode'),
   YAML = require('yamljs'),
   fs = require('fs'),
   path = require('path'),
-  cache = require('arr-cache');
+  cache = require('arr-cache'),
+  yfm = require('yfm');
 
 var express = require('express');
 var routes = require('./routes');
@@ -119,7 +120,11 @@ app.locals.getPosts = function () {
       var contentConfig = results[0],
         posts = results[1];
 
-      var blog = new Blog(posts, {
+      var incomingPosts = posts.map(function (post) {
+        return {name: post.name, content: yfm(post.content)};
+      });
+
+      var blog = new Blog(incomingPosts, {
           image_prefix: contentConfig.image_prefix,
           image_new_prefix: contentConfig.image_new_prefix
         }),
