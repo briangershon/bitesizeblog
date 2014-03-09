@@ -2,6 +2,8 @@
  * Module dependencies.
  */
 
+var PRODUCTION_CACHE_TTL = '30m';
+
 var github = require('octonode'),
   marked = require('marked'),
   GH = require('bitesize').GH,
@@ -10,7 +12,8 @@ var github = require('octonode'),
   _ = require('lodash'),
   YAML = require('yamljs'),
   fs = require('fs'),
-  path = require('path');
+  path = require('path'),
+  cache = require('arr-cache');
 
 var express = require('express');
 var routes = require('./routes');
@@ -33,6 +36,8 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
+var c = cache();
+
 // development only
 if ('development' === app.get('env')) {
   app.use(express.errorHandler());
@@ -45,7 +50,7 @@ if ('development' === app.get('env')) {
       return cachedResults;
     }
     catch (err) {
-      return null;
+      return undefined;
     }
   };
 
@@ -55,8 +60,12 @@ if ('development' === app.get('env')) {
   };
 
 } else {
-  var readCache = function () { return null; };
-  var writeCache = function () {};
+  var readCache = function (key) {
+    return c.fetch(key);
+  };
+  var writeCache = function (key, data) {
+    c.add(key, data, PRODUCTION_CACHE_TTL);
+  };
 }
 
 var envAccessToken = process.env.BITESIZE_GITHUB_ACCESS_TOKEN,
@@ -66,14 +75,11 @@ var envAccessToken = process.env.BITESIZE_GITHUB_ACCESS_TOKEN,
 var client = github.client(envAccessToken);
 var ghrepo = client.repo(envGitHubRepo);
 
-app.locals.configCache = readCache('config.cache.txt');
-app.locals.postCache = readCache('post.cache.txt') || [];
-
 app.locals.getConfig = function () {
-  console.log('app.locals.getConfig ENTER');
+  app.locals.configCache = readCache('config.cache.txt');
 
   return new Promise(function (resolve) {
-    if (app.locals.configCache) {
+    if ('undefined' !== typeof app.locals.configCache) {
       console.log('app.locals.getConfig FROM CACHE');
       resolve(app.locals.configCache);
       return;
@@ -95,9 +101,10 @@ app.locals.getConfig = function () {
 };
 
 app.locals.getPosts = function () {
-  console.log('app.locals.getPosts ENTER');
+  app.locals.postCache = readCache('post.cache.txt');
+
   return new Promise(function (resolve) {
-    if (app.locals.postCache.length > 0) {
+    if ('undefined' !== typeof app.locals.postCache && app.locals.postCache.length > 0) {
       console.log('app.locals.getPosts FROM CACHE');
       resolve(app.locals.postCache);
       return;

@@ -48,8 +48,7 @@ html
       div.row
         div.large-12.columns
           hr
-          p
-            © Copyright 2014 Brian Gershon. This is my <a href="https://github.com/briangershon/bitesizeblog" target="_blank">home-grown blog</a> running on node.js.
+          p © Copyright 2014 Brian Gershon. This is my <a href="https://github.com/briangershon/bitesizeblog" target="_blank">home-grown blog</a> running on node.js.
 
         //- div.large-4.columns
           //- ul.inline-list.right
@@ -58,8 +57,11 @@ html
           //-   li <a href="#">Link 3</a>
           //-   li <a href="#">Link 4</a>
 
-script(src='/javascripts/vendor/jquery.js')
-script(src='/javascripts/foundation.min.js')
+    p
+      small= "post data cached " + cacheTimestamp
 
-script(type='text/javascript').
-  $(document).foundation();
+    script(src='/javascripts/vendor/jquery.js')
+    script(src='/javascripts/foundation.min.js')
+
+    script(type='text/javascript').
+      $(document).foundation();
