@@ -1,3 +1,11 @@
+h1, h2, h3, h4, h5, h6, p {
+  font-family: 'PT Serif';
+}
+
+.sidebar p, .sidebar h5 {
+  font-family: 'PT Sans';
+}
+
 pre {
   overflow: auto;
 }

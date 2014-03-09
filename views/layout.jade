@@ -6,6 +6,8 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='alternate', href=feedURL, title='Evolving Bits', type='application/atom+xml')
     meta(name="viewport", content="width=device-width")
+    link(href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic", rel="stylesheet", type="text/css")
+    link(href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic", rel="stylesheet", type="text/css")
   body
     // Nav Bar
     div.row
@@ -32,7 +34,7 @@ html
           block content
 
         // Sidebar
-        div.large-3.columns
+        div.large-3.columns.sidebar
           block sidebar
 
     if !homePage
