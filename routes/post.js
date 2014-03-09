@@ -17,7 +17,12 @@ exports.index = function (req, res) {
     });
 
     if (filteredPosts.length === 1) {
-      res.render('post', {title: title, post: filteredPosts[0], cacheTimestamp: req.app.locals.cacheTimestamp});
+      res.render('post', {
+        title: title,
+        post: filteredPosts[0],
+        cacheTimestamp: req.app.locals.cacheTimestamp,
+        google_analytics_tracking_id: contentConfig.google_analytics_tracking_id
+      });
     } else {
       res.send(404);
     }

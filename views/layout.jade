@@ -60,8 +60,10 @@ html
     p
       small= "post data cached " + cacheTimestamp
 
-    script(src='/javascripts/vendor/jquery.js')
-    script(src='/javascripts/foundation.min.js')
+  script(src='/javascripts/vendor/jquery.js')
+  script(src='/javascripts/foundation.min.js')
 
-    script(type='text/javascript').
-      $(document).foundation();
+  script.
+    $(document).foundation();
+
+  include googleanalytics
