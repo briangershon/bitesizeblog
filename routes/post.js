@@ -21,6 +21,7 @@ exports.index = function (req, res) {
         title: title,
         post: filteredPosts[0],
         cacheTimestamp: req.app.locals.cacheTimestamp,
+        feedURL: contentConfig.subscribe_rss,
         google_analytics_tracking_id: contentConfig.google_analytics_tracking_id
       });
     } else {
