@@ -6,7 +6,7 @@ var PRODUCTION_CACHE_TTL = '30m';
 
 var github = require('octonode'),
   marked = require('marked'),
-  GH = require('bitesize').GH,
+  Snag = require('snag').Snag,
   Blog = require('bitesize').Blog,
   Promise = require('es6-promise').Promise,
   _ = require('lodash'),
@@ -86,11 +86,11 @@ app.locals.getConfig = function () {
       return;
     }
 
-    var gh = new GH({
+    var snag = new Snag({
       ghrepo: ghrepo
     });
 
-    gh.getFile('config.yml').then(function success(configFile) {
+    snag.getFile('config.yml').then(function success(configFile) {
       console.log('app.locals.getConfig RETRIEVED');
       app.locals.configCache = YAML.parse(configFile.content);
       writeCache('config.cache.txt', app.locals.configCache);
@@ -111,12 +111,12 @@ app.locals.getPosts = function () {
       return;
     }
 
-    var gh = new GH({
+    var snag = new Snag({
       ghrepo: ghrepo,
-      postPath: envPostPath
+      path: envPostPath
     });
 
-    Promise.all([app.locals.getConfig(), gh.getAllFiles()]).then(function (results) {
+    Promise.all([app.locals.getConfig(), snag.getAllFiles()]).then(function (results) {
       var contentConfig = results[0],
         posts = results[1];
 

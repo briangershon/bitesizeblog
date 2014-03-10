@@ -26,8 +26,9 @@
     "node": "0.10.x"
   },
   "dependencies": {
-    "bitesize": "0.0.6",
+    "bitesize": "0.0.7",
     "octonode": "~0.5.0",
+    "snag": "~0.0.1",
     "marked": "~0.3.1",
     "express": "~3.4.8",
     "jade": "~1.1.5",
