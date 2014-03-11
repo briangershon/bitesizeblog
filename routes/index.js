@@ -4,7 +4,7 @@
 var Promise = require('es6-promise').Promise;
 
 exports.index = function (req, res) {
-  Promise.all([req.app.locals.getConfig(), req.app.locals.getPosts()]).then(function (results) {
+  Promise.all([req.app.locals.getConfig(req.app), req.app.locals.getPosts(req.app)]).then(function (results) {
     var contentConfig = results[0],
       posts = results[1];
 
