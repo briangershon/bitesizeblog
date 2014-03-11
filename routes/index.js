@@ -11,6 +11,7 @@ exports.index = function (req, res) {
     var title = contentConfig.title;
     res.render('index', {
       title: title,
+      author: contentConfig.author,
       permalinkPrefix: contentConfig.permalink_prefix,
       posts: posts.slice(0, 3),
       feedURL: contentConfig.subscribe_rss,

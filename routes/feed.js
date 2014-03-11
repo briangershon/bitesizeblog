@@ -13,7 +13,7 @@ exports.feed = function (req, res) {
     var lastUpdated = new Date(posts[0].date);
 
     var feedResults = new Feed({
-      title:       contentConfig.title,
+      title:       contentConfig.title + " - " + contentConfig.author,
       description: contentConfig.description,
       id:          contentConfig.url + "/",   // match octopress version with trailing /
       link:        contentConfig.url + "/",   // match octopress version with trailing /

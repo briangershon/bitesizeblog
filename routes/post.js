@@ -19,6 +19,7 @@ exports.index = function (req, res) {
     if (filteredPosts.length === 1) {
       res.render('post', {
         title: title,
+        author: contentConfig.author,
         post: filteredPosts[0],
         cacheTimestamp: req.app.locals.cacheTimestamp,
         feedURL: contentConfig.subscribe_rss,
