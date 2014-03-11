@@ -7,6 +7,7 @@ var http = require('http');
 var path = require('path');
 var feedRoute = require('./routes/feed');
 var postRoute = require('./routes/post');
+var archivesRoute = require('./routes/archives');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.locals.getPosts = retrieve.getPosts;
 
 app.get('/', routes.index);
 app.get('/atom.xml', feedRoute.feed);
+app.get('/blog/archives', archivesRoute.index);
 
 retrieve.getConfig(app).then(function (contentConfig) {
   app.get(contentConfig.permalink, postRoute.index);

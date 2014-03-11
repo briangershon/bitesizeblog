@@ -1,0 +1,21 @@
+extend layout
+
+block content
+  each post, index in posts
+    article
+      p= post.date.toDateString()
+
+      h3
+        a(href="" + permalinkPrefix + post.route)= post.title
+
+      //
+        p
+          if post.categories && post.categories.length > 0
+            span= ' Categories: ' + post.categories + '.'
+
+          if post.tags && post.tags.length > 0
+            span= ' Tags: ' + post.tags + '.'
+
+    //- don't show hr above footer's hr
+    if index < posts.length - 1
+      hr
