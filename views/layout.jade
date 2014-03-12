@@ -8,20 +8,40 @@ html
     meta(name="viewport", content="width=device-width")
     link(href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic", rel="stylesheet", type="text/css")
     link(href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic", rel="stylesheet", type="text/css")
+    link(rel='stylesheet', href='/stylesheets/foundation-icons.css')
   body
     // Nav Bar
     div.row
       div.large-12.columns
         div.nav-bar.right
-          ul.button-group
+          ul.button-group.hide-for-small-only
             li
-              a.button(href="http://www.github.com/briangershon", target="_blank") GitHub
+              a.button(href="http://www.github.com/briangershon", target="_blank")
+                i.fi-social-github.size-24
             li
-              a.button(href="http://www.twitter.com/brianfive", target="_blank") Twitter
+              a.button(href="http://www.twitter.com/brianfive", target="_blank")
+                i.fi-social-twitter.size-24
             li
-              a.button(href="http://www.linkedin.com/in/briangershon", target="_blank") LinkedIn
+              a.button(href="http://www.linkedin.com/in/briangershon", target="_blank")
+                i.fi-social-linkedin.size-24
             li
-              a.button(href=feedURL) <img src="/images/rss.png" alt="atom feed" width="15px" />
+              a.button(href=feedURL)
+                i.fi-rss.size-24
+
+          ul.inline-list.right.show-for-small-only
+            li
+              a(href="http://www.github.com/briangershon")
+                i.fi-social-github.size-24
+            li
+              a(href="http://www.twitter.com/brianfive")
+                i.fi-social-twitter.size-24
+            li
+              a(href="http://www.linkedin.com/in/briangershon")
+                i.fi-social-linkedin.size-24
+            li
+              a(href=feedURL)
+                i.fi-rss.size-24
+
         h1
           a(href="/")= title
           //- small  Javascript
@@ -54,15 +74,8 @@ html
       div.row
         div.large-12.columns
           hr
-          p © Copyright 2014 Brian Gershon. This is my <a href="https://github.com/briangershon/bitesizeblog" target="_blank">home-grown blog</a> running on node.js.
-
-        //- div.large-4.columns
-          //- ul.inline-list.right
-          //-   li <a href="#">Link 1</a>
-          //-   li <a href="#">Link 2</a>
-          //-   li <a href="#">Link 3</a>
-          //-   li <a href="#">Link 4</a>
-
+          p © Copyright 2014 Brian Gershon.
+          p This is my <a href="https://github.com/briangershon/bitesizeblog" target="_blank">home-grown blog</a> running on node.js.
     p
       small= "post data cached " + cacheTimestamp
 

@@ -1,0 +1,75 @@
+body {
+  background: #f2f2f2;
+  background-image: url('/images/noise.png');
+}
+
+.top-bar {
+  height: 100px;
+}
+
+p {
+  font-size: 20px;
+  /*display: none;*/
+}
+
+section p {
+  color: white;
+}
+
+.row {
+  margin-top: 60px; /* for fixed nav */
+  width: 100%;
+}
+
+li {
+  margin-left: 2em;
+}
+
+pre code {
+  /*border: 1px solid #eee8d5;*/ /* cream */
+
+  /*line-height: 1.45em;*/
+/*  overflow: auto;
+  width: 100%;
+*/
+  color: #93a1a1; /* medium light gray */
+  background: #002b36; /* darkest blue */
+  background-image: url('/images/noise.png');
+
+  /*line-height: normal;*/ /* match Foundation */
+}
+
+p code, li code {
+  display: inline-block;
+  padding: .2em;
+  /*padding: .8em 1em;*/
+  background: white;
+  color: #555;
+  border: 1px solid #ddd;
+}
+
+pre {
+  width: 80%;
+  overflow: auto;
+  color: #93a1a1; /* medium light gray */
+  background: #002b36; /* darkest blue */
+  background-image: url('/images/noise.png');
+  line-height: normal; /* match Foundation */
+
+  margin-bottom: 2.1em;
+  padding: .8em 1em;
+  font-size: 20px;
+
+  /*
+  background: $pre-bg $noise-bg;
+  @include border-radius(.4em);
+  @extend .mono;
+  border: 1px solid $pre-border;
+  line-height: 1.45em;
+  font-size: 13px;
+  margin-bottom: 2.1em;
+  padding: .8em 1em;
+  color: $pre-color;
+  overflow: auto;
+   */
+}
