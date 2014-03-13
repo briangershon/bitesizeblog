@@ -15,8 +15,7 @@ exports.index = function (req, res) {
       posts: posts,
       feedURL: contentConfig.subscribe_rss,
       cacheTimestamp: req.app.locals.cacheTimestamp,
-      google_analytics_tracking_id: contentConfig.google_analytics_tracking_id,
-      homePage: true
+      google_analytics_tracking_id: contentConfig.google_analytics_tracking_id
     });
   }, function fail(err) {
     console.log('ARCHIVES ERROR', err);
